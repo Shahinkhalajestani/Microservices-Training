@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CurrencyExchangeService {
         this.environment=environment;
     }
 
+    @Transactional
     public List<CurrencyExchange> initializeFakeData(){
         String port = environment.getProperty("local.server.port");
         List<CurrencyExchange> exchangeList = new ArrayList<>();
@@ -36,6 +38,8 @@ public class CurrencyExchangeService {
                 .conversionMultiple(BigDecimal.valueOf(27)).build());
        return currencyExchangeRepository.saveAll(exchangeList);
     }
+
+    @Transactional
     public List<CurrencyExchange> findByFromAndTo(String from, String to){
         return currencyExchangeRepository.findAllByFromAndTo(from,to);
     }
